@@ -3,6 +3,20 @@
 #include <unordered_map>
 #include <windows.h>
 using namespace std;
+void banner()
+{
+    cout << R"(
+  ____   _       ____    ____   _  __  ____   _   _      _      ___   _   _ 
+ | __ ) | |     / __ \  / ___| | |/ / / ___| | | | |    / \    |_ _| | \ | |
+ |  _ \ | |    | |  | || |     | ' / | |     | |_| |   / _ \    | |  |  \| |
+ | |_) || |___ | |__| || |___  | . \ | |___  |  _  |  / ___ \   | |  | |\  |
+ |____/ |_____| \____/  \____| |_|\_\ \____| |_| |_| /_/   \_\ |___| |_| \_|
+                                                                              
+)" << endl;
+    cout << "=============================================================\n";
+    cout << "        BLOCKCHAIN SIMULATION PROJECT (C++)\n";
+    cout << "=============================================================\n\n";
+}
 class User
 {
 public:
@@ -17,9 +31,11 @@ public:
         }
         else
         {
-            cout << "1.Create Transaction\n2.Switch to Mining account\n3.View Blockchain\n4.Check Balances\n5.Exit\n";
-            
+            banner();
+            cout << "1.Create Transaction\n2.Switch to Mining account\n3.View BlockChain\n4.View all the Transactions you performed\n5.Check Balances\n5.Exit\n";
         }
+        user.close();
+        return 1;
     }
     void login(string usr, string priv)
     {
@@ -67,7 +83,7 @@ public:
         }
         else
         {
-            cout << "You will be directed to your wallet in a few sencods\n3.View BlockChain\n4.View all the Transactions you performed\n";
+            cout << "You will be directed to your wallet in a few sencods\n";
             Sleep(2500);
             system("cls");
             wallet(usr);
@@ -91,6 +107,7 @@ public:
 };
 int main()
 {
+    banner();
     cout << "Welcome, Login as a User or a Miner(U/m)\n";
     string in;
     cin >> in;
