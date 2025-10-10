@@ -14,11 +14,13 @@ void banner()
                                                                               
 )" << endl;
     cout << "=============================================================\n";
-    cout << "        BLOCKCHAIN SIMULATION PROJECT (C++)\n";
+    cout << "        BLOCKCHAIN SIMULATION \n";
     cout << "=============================================================\n\n";
 }
 class User
 {
+    string priv_key="", public_key="", name="";
+
 public:
     int wallet(string usr)
     {
@@ -67,12 +69,16 @@ public:
                 if (temp[1] == priv)
                 {
                     cout << "User found\n";
+                    priv_key = temp[1];
+                    name = temp[0];
+                    for(int i=0;i<32;i++)
+                    public_key.push_back(priv_key[i]^'a');
                     yes = true;
-                    cin.ignore();
+                    //cin.ignore();
                     break;
                 }
             }
-            cin.ignore();
+           // cin.ignore();
         }
         delete[] temp;
         user_name.close();
