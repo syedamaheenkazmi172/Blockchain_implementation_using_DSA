@@ -14,7 +14,7 @@ void banner()
                                                                               
 )" << endl;
     cout << "=============================================================\n";
-    cout << "        BLOCKCHAIN SIMULATION PROJECT (C++)\n";
+    cout << "        BLOCKCHAIN SIMULATION \n";
     cout << "=============================================================\n\n";
 }*/
 class User
