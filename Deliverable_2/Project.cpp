@@ -1,58 +1,120 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <windows.h>
 using namespace std;
-void login()
+class User
 {
-    fstream user_name, private_key;
-    string usr, pivate_key;
-    user_name.open("login.txt", ios::in);
-    private_key.open("Login_p.txt", ios::in);
-    string *temp = new string[2];
-    unordered_map<string, string> users;
-    while (getline(user_name, temp[0]))
+public:
+    int wallet(string usr)
     {
-        getline(private_key, temp[1]);
-        users[temp[0]] = temp[1];
+        fstream user;
+        user.open(usr + ".txt", ios::in);
+        if (!user)
+        {
+            cout << "User's File is missing\n";
+            return 0;
+        }
+        else
+        {
+            cout << "1.Create Transaction\n2.Switch to Mining account\n3.View Blockchain\n4.Check Balances\n5.Exit\n";
+            
+        }
     }
-    delete[] temp;
-    user_name.close();
-    private_key.close();
-}
-void signup();
-string verify_login(string input)
-{
-    if (input != "1" || input != "2")
+    void login(string usr, string priv)
     {
-        return "-1";
+        fstream user_name, private_key;
+        user_name.open("login.txt", ios::in);
+        if (!user_name)
+        {
+            cout << "Couldn't find the username file\n";
+            Sleep(2000);
+            cout << "Locate the file and try again\n";
+            return;
+        }
+        private_key.open("Login_p.txt", ios::in);
+        if (!private_key)
+        {
+            cout << "Couldn't find the Private_key file\n";
+            Sleep(2000);
+            cout << "Locate the file and try again\n";
+            return;
+        }
+        string *temp = new string[2];
+        bool yes = false;
+        while (getline(user_name, temp[0]))
+        {
+            cin.ignore();
+            getline(private_key, temp[1]);
+            if (temp[0] == usr)
+            {
+                if (temp[1] == priv)
+                {
+                    cout << "User found\n";
+                    yes = true;
+                    cin.ignore();
+                    break;
+                }
+            }
+            cin.ignore();
+        }
+        delete[] temp;
+        user_name.close();
+        private_key.close();
+        if (!yes)
+        {
+            cout << "Cannot found User\n";
+        }
+        else
+        {
+            cout << "You will be directed to your wallet in a few sencods\n3.View BlockChain\n4.View all the Transactions you performed\n";
+            Sleep(2500);
+            system("cls");
+            wallet(usr);
+        }
     }
-    else if (input == "1")
+    int verify_login(int input)
     {
-        return "1";
+        if (input == 2)
+        {
+            return 2;
+        }
+        else if (input == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
+        }
     }
-    else
-    {
-        return "2";
-    }
-}
+};
 int main()
 {
-    cout << "Welcome Wallet user\n1.Login as existing user\n2.Signup as a new User:\n";
-    string input;
-    cin >> input;
-    string n = verify_login(input);
-    if (n == "-1")
+    cout << "Welcome, Login as a User or a Miner(U/m)\n";
+    string in;
+    cin >> in;
+    if (in == "U")
     {
-        cout << "Invalid option selected\n";
+        User jh;
+        cout << "Welcome Wallet user\n1.Login as existing user\n2.Signup as a new User:\n";
+        int input;
+        cin >> input;
+        int n = jh.verify_login(input);
+        if (n == -1)
+        {
+            cout << "Invalid option selected\n";
+        }
+        else if (n == 1)
+        {
+            cout << "Enter your Username and Private Key to access your Wallet\n";
+            string temp = "", temp1 = "";
+            cin >> temp >> temp1;
+            jh.login(temp, temp1);
+        }
+        else
+        {
+            // signup();
+        }
     }
-    else if (n == "1")
-    {
-        login();
-    }
-    else
-    {
-        signup();
-    }
-
-    fstream hello;
 }
