@@ -4,7 +4,7 @@
 #include <windows.h>
 using namespace std;
 void banner()
-/*{
+{
     cout << R"(
   ____   _       ____    ____   _  __  ____   _   _      _      ___   _   _ 
  | __ ) | |     / __ \  / ___| | |/ / / ___| | | | |    / \    |_ _| | \ | |
@@ -16,7 +16,7 @@ void banner()
     cout << "=============================================================\n";
     cout << "        BLOCKCHAIN SIMULATION \n";
     cout << "=============================================================\n\n";
-}*/
+}
 class User
 {
     string priv_key="", public_key="", name="";
