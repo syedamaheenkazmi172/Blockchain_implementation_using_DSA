@@ -85,11 +85,11 @@ public:
         private_key.close();
         if (!yes)
         {
-            cout << "Cannot found User\n";
+            cout << "Cannot find User\n";
         }
         else
         {
-            cout << "You will be directed to your wallet in a few sencods\n";
+            cout << "You will be directed to your wallet in a few seconds\n";
             Sleep(2500);
             system("cls");
             wallet(usr);
