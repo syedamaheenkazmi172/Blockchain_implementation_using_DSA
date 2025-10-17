@@ -55,7 +55,7 @@ class BlockChain
         return ab;
     }
 
-    void transaction(double money)
+    Block* transaction(double money)
     {
         //PLEASE CONDUCT ALL VERIFICATIONS IN MAIN
 
@@ -114,6 +114,7 @@ class BlockChain
         ptr->index = amountofblocks;
         cout << "Index number for the transaction: " << ptr->index << endl;
         amountofblocks++; //has been increase as a new one has been added;
+        return ptr; //function changed from void to Block* so that this function can be implemented in other files 
     }
 };
 
