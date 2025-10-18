@@ -1,4 +1,8 @@
 #include <iostream>
+#include <stdexcept>
+#include <algorithm>
+
+#include "queue.h"
 #include "linked list testing/linkedlistimpel.cpp"
 
 using namespace std;
@@ -8,18 +12,8 @@ struct queue
     Block* front;
     Block* rear;
 
-    queue()
+    void queue::enqueue(Block *ptr)
     {
-        front = NULL;
-        rear = NULL;
-    }
-
-    void enqueue(double money)
-    {
-        Block* ptr = new Block;
-        ptr->fee = money;
-        ptr->next = NULL;
-
         if(rear == NULL)   //if the queue is empty
         {
             front = rear = ptr;
@@ -36,21 +30,21 @@ struct queue
             {
                 if (i->fee < j->fee) 
                 {
-                    swap(i->fee, j->fee);
-                    swap(i->index, j->index);
-                    swap(i->nonce, j->nonce);
-                    swap(i->hash, j->hash);
-                    swap(i->prevHash, j->prevHash);
+                    std::swap(i->fee, j->fee);
+                    std::swap(i->index, j->index);
+                    std::swap(i->nonce, j->nonce);
+                    std::swap(i->hash, j->hash);
+                    std::swap(i->prevHash, j->prevHash);
                 }
             }
         }
     }
 
-    void dequeue()
+    void queue::dequeue()
     {
         if(isEmpty())
         {
-            cout<<"Queue is empty"<<endl;
+            std::cout<<"Queue is empty"<<std::endl;
             return;
         }
         Block* temp = front; //storing the previous front node
@@ -63,12 +57,12 @@ struct queue
         delete temp; 
     }
 
-    bool isEmpty()
+    bool queue::isEmpty()
     {
         return front == NULL;
     }
 
-    double getFront()
+    double queue::getFront()
     {
         if(front != NULL)
             return front->fee;

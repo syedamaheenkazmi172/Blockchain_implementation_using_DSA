@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+
+#include "..\queue.h"
 // #include <SHA256.h>
 using namespace std;
 
@@ -61,7 +63,7 @@ string hashmaker(string ab)
 }
 
 
-Block* transaction(double money)
+void transaction(double money)
 {
     Block* ptr = new Block;
 
@@ -80,7 +82,11 @@ Block* transaction(double money)
 
     amountofblocks++; //has been increase as a new one has been added;
 
-    return ptr; //function changed from void to Block* so that this function can be implemented in other files 
+    //enqueue the newly created block into the queue
+    txQueue.enqueue(ptr);
+
+    //return ptr; //function changed from void to Block* so that this function can be implemented in other files 
+    //changing it back to void as it was giving some sort of error that will be dealt with later
 }
 
 
