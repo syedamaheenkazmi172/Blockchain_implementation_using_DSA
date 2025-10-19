@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "..\queue.h"
+//#include "..\queue.h"
 // #include <SHA256.h>
 using namespace std;
 
@@ -63,7 +63,7 @@ string hashmaker(string ab)
 }
 
 
-void transaction(double money)
+Block* transaction(double money)
 {
     Block* ptr = new Block;
 
@@ -75,7 +75,7 @@ void transaction(double money)
     ptr->nonce = noncemaker();
     ptr->hash = hashmaker(ptr->nonce);
 
-    cout << "First hash: " << ptr->hash << endl;
+    cout << "Generated Hash: " << ptr->hash << endl;
 
     ptr->index = amountofblocks;
     cout << "Index number for the transaction: " << ptr->index << endl;
@@ -83,10 +83,9 @@ void transaction(double money)
     amountofblocks++; //has been increase as a new one has been added;
 
     //enqueue the newly created block into the queue
-    txQueue.enqueue(ptr);
+    //txQueue.enqueue(ptr);
 
-    //return ptr; //function changed from void to Block* so that this function can be implemented in other files 
-    //changing it back to void as it was giving some sort of error that will be dealt with later
+    return ptr; //refer to linkedlistoutput.cpp and queuetestoutput.cpp
 }
 
 
