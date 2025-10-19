@@ -79,6 +79,7 @@ Block *transaction(double money = 0)
         amountofblocks++; // has been increase as a new one has been added;
 
     return ptr; //function changed from void to Block* so that this function can be implemented in other files 
+    }
 }
 
 
