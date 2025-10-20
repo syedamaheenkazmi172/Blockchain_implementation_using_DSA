@@ -30,11 +30,11 @@ struct queue
             {
                 if (i->fee < j->fee) 
                 {
-                    std::swap(i->fee, j->fee);
-                    std::swap(i->index, j->index);
-                    std::swap(i->nonce, j->nonce);
-                    std::swap(i->hash, j->hash);
-                    std::swap(i->prevHash, j->prevHash);
+                    swap(i->fee, j->fee);
+                    swap(i->index, j->index);
+                    swap(i->nonce, j->nonce);
+                    swap(i->hash, j->hash);
+                    swap(i->prevHash, j->prevHash);
                 }
             }
         }
@@ -44,7 +44,7 @@ struct queue
     {
         if(isEmpty())
         {
-            std::cout<<"Queue is empty"<<std::endl;
+            cout<<"Queue is empty"<<std::endl;
             return;
         }
         Block* temp = front; //storing the previous front node
