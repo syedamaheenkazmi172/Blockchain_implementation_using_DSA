@@ -2,8 +2,8 @@
 #include <stdexcept>
 #include <algorithm>
 
-#include "queue.h"
-#include "linked list testing/linkedlistimpel.cpp"
+//#include "queue.h"
+#include "linkedlistimpel.cpp"
 
 using namespace std;
 
@@ -12,7 +12,13 @@ struct queue
     Block* front;
     Block* rear;
 
-    void queue::enqueue(Block *ptr)
+    queue()
+    {
+        front = NULL;
+        rear = NULL;
+    }
+
+    void enqueue(Block *ptr)
     {
         if(rear == NULL)   //if the queue is empty
         {
@@ -30,21 +36,21 @@ struct queue
             {
                 if (i->fee < j->fee) 
                 {
-                    swap(i->fee, j->fee);
-                    swap(i->index, j->index);
-                    swap(i->nonce, j->nonce);
-                    swap(i->hash, j->hash);
-                    swap(i->prevHash, j->prevHash);
+                    std::swap(i->fee, j->fee);
+                    std::swap(i->index, j->index);
+                    std::swap(i->nonce, j->nonce);
+                    std::swap(i->hash, j->hash);
+                    std::swap(i->prevHash, j->prevHash);
                 }
             }
         }
     }
 
-    void queue::dequeue()
+    void dequeue()
     {
         if(isEmpty())
         {
-            cout<<"Queue is empty"<<std::endl;
+            std::cout<<"Queue is empty"<<std::endl;
             return;
         }
         Block* temp = front; //storing the previous front node
@@ -57,12 +63,12 @@ struct queue
         delete temp; 
     }
 
-    bool queue::isEmpty()
+    bool isEmpty()
     {
         return front == NULL;
     }
 
-    double queue::getFront()
+    double getFront()
     {
         if(front != NULL)
             return front->fee;
@@ -70,3 +76,18 @@ struct queue
             throw runtime_error("Queue is empty");
     }
 };
+
+int main()
+{
+    double fee = 12;
+    double fee2 = 13;
+    Block* a = transaction(fee);
+    Block* b = transaction(fee2);
+    
+    queue* pt = new queue;
+    pt->enqueue(a);
+    cout << pt->getFront() << endl;
+
+    pt->enqueue(b);
+    cout << pt->getFront();
+}

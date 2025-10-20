@@ -2,6 +2,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <windows.h>
+#include "queue1.cpp"
 using namespace std;
 void banner()
 {
@@ -19,7 +20,7 @@ void banner()
 }
 class User
 {
-    string priv_key="", public_key="", name="";
+    string priv_key = "", public_key = "", name = "";
 
 public:
     int wallet(string usr)
@@ -33,8 +34,42 @@ public:
         }
         else
         {
+            link *head, *ptr;
+            int count_of_unallocated_blocks = 0;
             banner();
             cout << "1.Create Transaction\n2.Switch to Mining account\n3.View BlockChain\n4.View all the Transactions you performed\n5.Check Balances\n5.Exit\n";
+            int choice = 0;
+            switch (choice)
+            {
+            default:
+                cout << "Invalid choice\n";
+            case 1:
+            {
+                if (count_of_unallocated_blocks > 1)
+                {
+                    cout << "Enter the Total amount you want to transfer\n";
+                    double amount;
+                    cin >> amount;
+                    put(count_of_unallocated_blocks, ptr, transaction(amount));
+                    count_of_unallocated_blocks++;
+                }
+                else
+                {
+                    cout << "Enter the Total amount you want to transfer\n";
+                    double amount;
+                    cin >> amount;
+                    initial(head, ptr, amount);
+                    count_of_unallocated_blocks++;
+                }
+            }
+            case 2:
+            {
+                for (link *ptr = head; ptr != NULL; ptr = ptr->next)
+                {
+                    cout << ptr->block->hash << "->";
+                }
+            }
+            }
         }
         user.close();
         return 1;
@@ -71,14 +106,14 @@ public:
                     cout << "User found\n";
                     priv_key = temp[1];
                     name = temp[0];
-                    for(int i=0;i<32;i++)
-                    public_key.push_back(priv_key[i]^'a');
+                    for (int i = 0; i < 32; i++)
+                        public_key.push_back(priv_key[i] ^ 'a');
                     yes = true;
-                    //cin.ignore();
+                    // cin.ignore();
                     break;
                 }
             }
-           // cin.ignore();
+            // cin.ignore();
         }
         delete[] temp;
         user_name.close();
