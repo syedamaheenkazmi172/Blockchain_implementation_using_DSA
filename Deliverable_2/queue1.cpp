@@ -7,7 +7,7 @@ struct link
     link *next = NULL;
     link *prev = NULL;
 };
-link *enqueue(Block *f, int i, link *p)
+/*link *enqueue(Block *f, int i, link *p)
 {
     link *s = new link;
     s->block = f;
@@ -16,16 +16,21 @@ link *enqueue(Block *f, int i, link *p)
         s->prev = p;
     }
     return s;
-}
+}*/
 void initial(link *&head, link *&ptr, double money)
 {
     head = new link;
     head->block = transaction(money);
     ptr = head;
 }
-void put(int i, link *&ptr, Block *block)
+void enqueue(int i, link *&ptr,double money)
 {
-    link *s = enqueue(block, i, ptr);
-    ptr->next = s;
+    link *temp = ptr;
+    ptr->next = new link;
     ptr = ptr->next;
+    ptr->block = transaction(money);
+    if (i > 1)
+    {
+        ptr->prev = temp;
+    }
 }
