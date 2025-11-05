@@ -37,16 +37,21 @@ public:
         }
         else
         {
-            string temp = "", temp1 = "";
-            getline(user, temp, '|'), getline(user, temp1, '|');
+
             user.close();
-            banner();
             link *head, *ptr;
             int count_of_unallocated_blocks = 0;
-            cout << "1.Create Transaction\t\t\t\t\t\t\t\t" << temp << "\n2.Switch to Mining account\t\t\t\t\t\t\t" << temp1 << "\n3.View Pending Queue of your Transactions\n4.View Detailed History\n5.Exit\n";
-            int choice = 0;
+
             while (true)
             {
+                banner();
+                fstream user;
+                user.open(usr + ".txt", ios::in);
+                string temp = "", temp1 = "";
+                getline(user, temp, '|'), getline(user, temp1, '|');
+                user.close();
+                cout << "1.Create Transaction\t\t\t\t\t\t\t\t" << temp << "\n2.Switch to Mining account\t\t\t\t\t\t\t" << temp1 << "\n3.View Pending Queue of your Transactions\n4.View Detailed History\n5.Exit\n";
+                int choice = 0;
                 cout << "\nSelect choice\n";
                 cin >> choice;
                 switch (choice)
@@ -86,6 +91,9 @@ public:
                             count_of_unallocated_blocks++;
                         }
                     }
+                    cout << "\nRedirecting to Dashboard in 5 seconds\n";
+                    Sleep(5000);
+                    system("cls");
                     break;
                 }
                 case 3:

@@ -94,8 +94,8 @@ Block *transaction(double money = 0, string name = "")
         if (am < money)
         {
             cout << "Specified Amount is more than Balance\n";
-            Block *ptr;
-            return ptr;
+            user.close();
+            return NULL;
         }
         else
         {
@@ -121,7 +121,7 @@ Block *transaction(double money = 0, string name = "")
             return ptr; // function changed from void to Block* so that this function can be implemented in other files
         }
     }
-    return ptr;
+    return NULL;
 }
 
 // //if we want to use sha256 for hashing purposes we will need to download the openssl library and make a specific function to use sha256 (too much work)
