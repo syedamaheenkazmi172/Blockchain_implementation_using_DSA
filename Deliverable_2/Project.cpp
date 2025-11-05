@@ -37,10 +37,13 @@ public:
         }
         else
         {
+            string temp = "", temp1 = "";
+            getline(user, temp, '|'), getline(user, temp1, '|');
+            user.close();
             banner();
             link *head, *ptr;
             int count_of_unallocated_blocks = 0;
-            cout << "1.Create Transaction\n2.Switch to Mining account\n3.View Pending Queue of your Transactions\n4.View Detailed History\n5.Exit\n";
+            cout << "1.Create Transaction\t\t\t\t\t\t\t\t" << temp << "\n2.Switch to Mining account\t\t\t\t\t\t\t" << temp1 << "\n3.View Pending Queue of your Transactions\n4.View Detailed History\n5.Exit\n";
             int choice = 0;
             while (true)
             {
@@ -60,7 +63,7 @@ public:
                             cout << "Enter the Total amount you want to transfer\n";
                             double amount;
                             cin >> amount;
-                            enqueue(count_of_unallocated_blocks, ptr, amount);
+                            enqueue(count_of_unallocated_blocks, ptr, amount, usr);
                             count_of_unallocated_blocks++;
                         }
                         else
@@ -79,7 +82,7 @@ public:
                             cout << "Enter the Total amount you want to transfer\n";
                             double amount;
                             cin >> amount;
-                            initial(head, ptr, amount);
+                            initial(head, ptr, amount, usr);
                             count_of_unallocated_blocks++;
                         }
                     }

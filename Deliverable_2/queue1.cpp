@@ -17,18 +17,18 @@ struct link
     }
     return s;
 }*/
-void initial(link *&head, link *&ptr, double money)
+void initial(link *&head, link *&ptr, double money, string name)
 {
     head = new link;
-    head->block = transaction(money);
+    head->block = transaction(money, name);
     ptr = head;
 }
-void enqueue(int i, link *&ptr,double money)
+void enqueue(int i, link *&ptr, double money, string name)
 {
     link *temp = ptr;
     ptr->next = new link;
     ptr = ptr->next;
-    ptr->block = transaction(money);
+    ptr->block = transaction(money, name);
     if (i > 1)
     {
         ptr->prev = temp;
