@@ -6,6 +6,7 @@
 using namespace std;
 void banner()
 {
+
     cout << R"(
   ____   _       ____    ____   _  __  ____   _   _      _      ___   _   _ 
  | __ ) | |     / __ \  / ___| | |/ / / ___| | | | |    / \    |_ _| | \ | |
@@ -31,14 +32,15 @@ public:
         if (!user)
         {
             cout << "User's File is missing\n";
+            user.close();
             return 0;
         }
         else
         {
+            banner();
             link *head, *ptr;
             int count_of_unallocated_blocks = 0;
-            banner();
-            cout << "1.Create Transaction\n2.Switch to Mining account\n3.View Pending Queue\n4.View all the Transactions you performed\n5.Check Balances\n5.Exit\n";
+            cout << "1.Create Transaction\n2.Switch to Mining account\n3.View Pending Queue of your Transactions\n4.View Detailed History\n5.Exit\n";
             int choice = 0;
             while (true)
             {
@@ -64,7 +66,7 @@ public:
                         else
                         {
                             cout << "Private key doesnot match\n";
-                            //return 0;
+                            // return 0;
                         }
                     }
                     else
@@ -72,7 +74,7 @@ public:
                         string pi = "";
                         cout << "Enter your Private key for extra authentication\n";
                         cin >> pi;
-                        if (pi==priv_key)
+                        if (pi == priv_key)
                         {
                             cout << "Enter the Total amount you want to transfer\n";
                             double amount;
