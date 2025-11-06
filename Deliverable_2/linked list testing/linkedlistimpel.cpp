@@ -60,18 +60,41 @@ string noncemaker() // generates a 6 digit integer that can be used as a nonce
 
 string hashmaker(string ab)
 {
-    // convert nonce(string) to a random value so that we can hash it
-    int val = stoi(ab) * 37 + 13; // stoi is a string to integer converter
+    int val = stoi(ab); //convert string to integer for hashing
 
-    for (int i = 0; i < 6; i++) // 6 character hash
+    string finalans = "";   //final answer will be stored here
+
+    while(val != 0)
     {
-        char base = 'A' + (stoi(ab) % 10); // the first part of the hash will keep changing b/w 'A' & 'J'
-        char postbase = base + (val % 26); // sample functin: A + 0-25(A-Z) = AA/AB....
-        ab += postbase;                    // adds postbase to the string hash
-        val = val / 3 + i * 7;             // changes the value of val for the next iteration
+        int remainder = 0;  //storing each remainder when val gets divided by 16
+        
+        char hexed;     //stores the ASCII coverted form of the remainder
+
+        remainder = val % 16;
+
+        if(remainder < 10)          //in base16, 0-9 are the same
+        {
+            hexed = remainder + 48;     //in the ASCII table, numbers go from 48(0) to 57(9)
+        }
+
+        else
+        {
+            hexed = remainder + 55;      //in the ASCII table, alphabets start from 65(A) so 10 + 55 = A
+        }
+
+        finalans += hexed;      //updating the final answer string
+        remainder = remainder/16;       //have to divide by 16 each time
     }
 
-    return ab;
+    int size = finalans.size();         //we have to reverse the final answer
+    for(int i = 0; i < size/2; i++)     //simple swap
+    {
+        char temp = finalans[size - i - 1];
+        finalans[size - i - 1] = finalans[i];
+        finalans[i] = temp;
+    }
+
+    return finalans;
 }
 
 Block *transaction(double money = 0, string name = "")
