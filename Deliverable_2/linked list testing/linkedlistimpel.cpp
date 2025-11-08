@@ -83,7 +83,7 @@ string hashmaker(string ab)
         }
 
         finalans += hexed;      //updating the final answer string
-        remainder = remainder/16;       //have to divide by 16 each time
+        val = val/16;       //have to divide by 16 each time
     }
 
     int size = finalans.size();         //we have to reverse the final answer
