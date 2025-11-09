@@ -3,7 +3,58 @@
 #include <unordered_map>
 #include <windows.h>
 #include "queue1.cpp"
+#include <bitset>
+#include <ctime>
 using namespace std;
+string private_key_maker(string name_salt)
+{
+    bitset<96> nu_64;
+    int size = name_salt.length();
+    int pos = 95;
+    for (int i = 0; i < size; i++)
+    {
+        bitset<8> temp(name_salt[i]);
+        for (int j = 7; j >= 0; j--)
+        {
+            nu_64[pos] = temp[j];
+            pos--;
+        }
+    }
+    string private_key = "";
+    pos = 95;
+    for (int i = 0; i < 16; i++)
+    {
+        unsigned long temp;
+        bitset<6> y;
+        for (int j = 5; j >= 0; j--)
+        {
+            y[j] = nu_64[pos];
+            pos--;
+        }
+        temp = y.to_ullong();
+        if (temp < 26)
+        {
+            private_key += char(temp + 65);
+        }
+        else if (temp >= 26 && temp < 52)
+        {
+            private_key += char((temp % 26) + 97);
+        }
+        else if (temp >= 52 && temp < 62)
+        {
+            private_key += char((temp % 10) + 48);
+        }
+        else if (temp == 62)
+        {
+            private_key += "/";
+        }
+        else
+        {
+            private_key += "+";
+        }
+    }
+    return private_key;
+}
 void banner()
 {
 
@@ -177,8 +228,60 @@ public:
         }
     }
 };
+void sign_up()
+{
+y:
+    fstream insert_new_user, insert_new_private_key;
+    insert_new_user.open("login.txt", ios::app);
+    insert_new_private_key.open("login_p.txt", ios::app);
+    string username;
+    cout << "Add your username\n";
+    cin >> username;
+    fstream log;
+    log.open("login.txt", ios::in);
+    string temp;
+    while (getline(log, temp))
+    {
+        if (temp == username)
+        {
+            cout << "Username already taken, choose another\n";
+            Sleep(3000);
+            system("cls");
+            banner();
+            log.close();
+            insert_new_private_key.close();
+            insert_new_user.close();
+            goto y;
+        }
+    }
+    srand(time(0));
+    int salt = rand() % 10000;
+    string private_key = private_key_maker(username + to_string(salt));
+    cout << "\nYour generated Private_key is: " << private_key << "\nStore this key somewhere as you will be shown this private key only once\nPress any key+Enter key to continue\n"
+         << endl;
+    char c;
+    cin >> c;
+    if (c)
+    {
+        insert_new_private_key << private_key + "\n";
+        insert_new_user << username + "\n";
+        insert_new_private_key.close();
+        log.close();
+        fstream create_user_file;
+        create_user_file.open(username + ".txt", ios::out);
+        create_user_file << "Wallet Owner:" << username << "|Current Coins:0|";
+        insert_new_user.close();
+    }
+    
+}
+class Miner
+{
+public:
+
+};
 int main()
 {
+u:
     banner();
     cout << "Welcome, Login as a User or a Miner(U/m)\n";
     string in;
@@ -202,7 +305,9 @@ int main()
         }
         else if (input == 2)
         {
-            cout << "Signup functionality is under development\n";
+            sign_up();
+            system("cls");
+            goto u;
         }
     }
     else if (in == "m")
