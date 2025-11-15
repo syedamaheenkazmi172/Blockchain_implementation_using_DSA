@@ -1,10 +1,14 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <fstream>
 
-// #include "..\queue.h"
+#include "queue.h"
+#include "linkedlistimpel.h"
 //  #include <SHA256.h>
 using namespace std;
+
+
 void update_money(double money, double amount, fstream &user, string name)
 {
     string temp = "";
@@ -21,35 +25,86 @@ void update_money(double money, double amount, fstream &user, string name)
     user_out << temp + "|";
     user_out.close();
 }
-struct Block
+
+BlockChain::BlockChain() // CONSTRUCTOR
 {
-    int index;
-    string prevHash;
-    string nonce;
-    string hash;
-    Block *next;
+    this->head = nullptr;
+    this->tail = nullptr;
+    getChain();
+}
 
-    Block *prev; // blocks are supposed to be interconnected especially as we are also considering prevHash
-    double fee;
-};
-
-// THIS CLASS IS GOING TO BE IMPLEMENTED POST DELIVERABLE 2
-// working with a class makes it easier to connect all the Blocks (i.e nodes) hence fullfilling the purpose of the linked list and blockchain
-class BlockChain
+void BlockChain::getChain()
 {
-private:
-    Block *previous; // the second last node should always be assigned to previous
-    Block *head;     // the first node should always be assigned to head
+    ifstream infile;
+    infile.open("blockchain.txt");
 
-public:
-    BlockChain() // CONSTRUCTOR
+    if (!infile)
     {
-        this->previous = NULL;
-        this->head = NULL;
+        return; // file not found, empty chain
     }
-};
 
-static int amountofblocks; // updating index for each block
+    while (head)
+    {
+        // delete any existing chain in memory to free up space
+        Block *tmp = head;
+        head = head->next;
+        delete tmp;
+    }
+
+    head = tail = nullptr; // reset chain
+
+    string line;
+    int linecount = 0;
+
+    while (getline(infile, line))
+    {
+        if (line.empty())
+        {
+            continue;
+            // move to next line
+        }
+
+        stringstream ss(line);
+        Block *newblock = new Block;
+
+        ss >> newblock->index >> newblock->prevHash >> newblock->nonce >> newblock->hash >> newblock->fee;
+        insert(newblock);
+        cout<<"Loaded Block " << linecount << ": " << newblock->index << " " << newblock->prevHash << " " << newblock->nonce << " " << newblock->hash << " " << newblock->fee << endl;
+        linecount++;
+    }
+}
+
+void BlockChain::insert(Block *ptr)
+{
+    ptr->next = NULL;
+    ptr->prev = NULL;
+
+    if (tail == NULL)
+    { // empty chain
+        head = tail = ptr;
+        // genesis previous hash
+        if (ptr->prevHash.empty())
+            ptr->prevHash = "0";
+    }
+    else
+    {
+        tail->next = ptr;
+        ptr->prev = tail;
+        // set prevHash of new block to previous block's hash (overwrite if needed)
+        ptr->prevHash = tail->hash;
+        tail = ptr;
+    }
+
+    // Append to file
+    ofstream outfile;
+    outfile.open("blockchain.txt", ios::app);
+    outfile << ptr->index << " " << ptr->prevHash << " " << ptr->nonce << " " << ptr->hash << " " << ptr->fee << "\n";
+    outfile.close();
+}
+
+BlockChain chain = BlockChain(); // global blockchain object
+
+//static int amountofblocks; // updating index for each block
 
 string noncemaker() // generates a 6 digit integer that can be used as a nonce
 {
@@ -97,7 +152,7 @@ string hashmaker(string ab)
     return finalans;
 }
 
-Block *transaction(double money = 0, string name = "")
+void transaction(double money = 0, string name = "")
 {
     Block *ptr;
     if (money != 0)
@@ -119,7 +174,7 @@ Block *transaction(double money = 0, string name = "")
         {
             cout << "Specified Amount is more than Balance\n";
             user.close();
-            return NULL;
+            // return NULL;
         }
         else
         {
@@ -128,7 +183,9 @@ Block *transaction(double money = 0, string name = "")
             Block *ptr = new Block;
             update_money(am, money, user, name);
             ptr->fee = money;
-            ptr->next = NULL; // new node so the next node should always be null
+
+            // remove next and prev pointers as blocks are not being linked here, they will be linked during mining phase using BlockChain class
+            // ptr->next = NULL; // new node so the next node should always be null
 
             ptr->prevHash = hashmaker(noncemaker()); // we dont need a previous nonce when starting the blockchain
             ptr->fee = money;
@@ -142,12 +199,28 @@ Block *transaction(double money = 0, string name = "")
 
             amountofblocks++; // has been increase as a new one has been added;
 
-            return ptr; // function changed from void to Block* so that this function can be implemented in other files
+            txQueue.enqueue(ptr); // adding the new transaction to the queue
+            // return ptr;           // function changed from void to Block* so that this function can be implemented in other files
         }
     }
-    return NULL;
+    // return NULL;
 }
 
+void mine_transaction()
+{
+    if (txQueue.isEmpty())
+    {
+        cout << "No transactions to mine\n";
+        return;
+    }
+
+    Block *ptr = new Block;
+    ptr = nullptr;
+    ptr = txQueue.front; // getting the front of the queue
+    txQueue.dequeue();   // removing the transaction from the queue after mining
+
+    chain.insert(ptr); // inserting the mined block into the blockchain
+}
 // //if we want to use sha256 for hashing purposes we will need to download the openssl library and make a specific function to use sha256 (too much work)
 
 // //using a SHA256 implementation file as a header and using the functions provided in it

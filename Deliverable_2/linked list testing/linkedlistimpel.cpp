@@ -97,55 +97,55 @@ string hashmaker(string ab)
     return finalans;
 }
 
-Block *transaction(double money = 0, string name = "")
-{
-    Block *ptr;
-    if (money != 0)
-    {
-        fstream user;
-        user.open(name + ".txt", ios::in);
-        string temp = "";
-        double am;
-        getline(user, temp);
-        string nu = "";
-        int n = temp.size();
-        for (int i = 0; temp[n - i - 2] != ':'; i++)
-        {
-            nu.insert(0, 1, temp[n - i - 2]);
-        }
-        am = stod(nu);
-        if (am < money)
-        {
-            cout << "Specified Amount is more than Balance\n";
-            user.close();
-            return NULL;
-        }
-        else
-        {
-            user.close();
-            user.open(name + ".txt", ios::in);
-            Block *ptr = new Block;
-            update_money(am, money, user, name);
-            ptr->fee = money;
-            ptr->next = NULL; // new node so the next node should always be null
+// Block *transaction(double money = 0, string name = "")
+// {
+//     Block *ptr;
+//     if (money != 0)
+//     {
+//         fstream user;
+//         user.open(name + ".txt", ios::in);
+//         string temp = "";
+//         double am;
+//         getline(user, temp);
+//         string nu = "";
+//         int n = temp.size();
+//         for (int i = 0; temp[n - i - 2] != ':'; i++)
+//         {
+//             nu.insert(0, 1, temp[n - i - 2]);
+//         }
+//         am = stod(nu);
+//         if (am < money)
+//         {
+//             cout << "Specified Amount is more than Balance\n";
+//             user.close();
+//             return NULL;
+//         }
+//         else
+//         {
+//             user.close();
+//             user.open(name + ".txt", ios::in);
+//             Block *ptr = new Block;
+//             update_money(am, money, user, name);
+//             ptr->fee = money;
+//             ptr->next = NULL; // new node so the next node should always be null
 
-            ptr->prevHash = hashmaker(noncemaker()); // we dont need a previous nonce when starting the blockchain
-            ptr->fee = money;
-            ptr->nonce = noncemaker();
-            ptr->hash = hashmaker(ptr->nonce);
+//             ptr->prevHash = hashmaker(noncemaker()); // we dont need a previous nonce when starting the blockchain
+//             ptr->fee = money;
+//             ptr->nonce = noncemaker();
+//             ptr->hash = hashmaker(ptr->nonce);
 
-            cout << "Generated Hash: " << ptr->hash << endl;
+//             cout << "Generated Hash: " << ptr->hash << endl;
 
-            ptr->index = amountofblocks;
-            cout << "Index number for the transaction: " << ptr->index << endl;
+//             ptr->index = amountofblocks;
+//             cout << "Index number for the transaction: " << ptr->index << endl;
 
-            amountofblocks++; // has been increase as a new one has been added;
+//             amountofblocks++; // has been increase as a new one has been added;
 
-            return ptr; // function changed from void to Block* so that this function can be implemented in other files
-        }
-    }
-    return NULL;
-}
+//             return ptr; // function changed from void to Block* so that this function can be implemented in other files
+//         }
+//     }
+//     return NULL;
+// }
 
 // //if we want to use sha256 for hashing purposes we will need to download the openssl library and make a specific function to use sha256 (too much work)
 
