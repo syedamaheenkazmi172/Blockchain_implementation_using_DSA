@@ -95,11 +95,25 @@ void BlockChain::insert(Block *ptr)
         tail = ptr;
     }
 
-    // Append to file
-    ofstream outfile;
-    outfile.open("blockchain.txt", ios::app);
-    outfile << ptr->index << " " << ptr->prevHash << " " << ptr->nonce << " " << ptr->hash << " " << ptr->fee << "\n";
-    outfile.close();
+}
+
+void BlockChain::saveChain() const
+{
+    ofstream ofs("blockchain.txt", ios::trunc);
+    if (!ofs) {
+        cerr << "Error: couldn't open blockchain.txt for writing\n";
+        return;
+    }
+
+    // format: index|prevHash|nonce|hash|fee
+    for (Block* it = head; it != nullptr; it = it->next) {
+        ofs << it->index << "|" << it->prevHash << "|"
+            << it->nonce << "|" << it->hash << "|"
+            << it->fee << "\n";
+    }
+    ofs.close();
+    cout << "Blockchain saved to blockchain.txt\n";
+    //this will store blockchain in a txt file so next time it can be loaded from there
 }
 
 BlockChain chain = BlockChain(); // global blockchain object
@@ -152,7 +166,7 @@ string hashmaker(string ab)
     return finalans;
 }
 
-void transaction(double money = 0, string name = "")
+Block* transaction(double money = 0, string name = "")
 {
     Block *ptr;
     if (money != 0)
@@ -174,7 +188,7 @@ void transaction(double money = 0, string name = "")
         {
             cout << "Specified Amount is more than Balance\n";
             user.close();
-            // return NULL;
+            return NULL;
         }
         else
         {
@@ -200,10 +214,10 @@ void transaction(double money = 0, string name = "")
             amountofblocks++; // has been increase as a new one has been added;
 
             txQueue.enqueue(ptr); // adding the new transaction to the queue
-            // return ptr;           // function changed from void to Block* so that this function can be implemented in other files
+            return ptr;           // function changed from void to Block* so that this function can be implemented in other files
         }
     }
-    // return NULL;
+    return NULL;
 }
 
 void mine_transaction()
