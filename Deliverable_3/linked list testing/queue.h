@@ -13,6 +13,8 @@ struct queue
     void dequeue();
     bool isEmpty();
     double getFront();
+    void display();
+    void dequeueById(int id);
 };
 
 extern queue txQueue;

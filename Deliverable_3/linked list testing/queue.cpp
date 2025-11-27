@@ -72,3 +72,49 @@ double queue::getFront()
     else
         throw runtime_error("Queue is empty");
 }
+void queue::display()
+{
+    Block* current = front;
+    while (current != NULL)
+    {
+        cout <<current->index<< ". Block Fee: " << current->fee << endl;
+        current = current->next;
+    }
+}
+void queue::dequeueById(int id)
+{
+    if (isEmpty())
+    {
+        cout << "Queue is empty" << std::endl;
+        return;
+    }
+
+    Block* current = front;
+    Block* previous = NULL;
+
+    while (current != NULL && current->index != id)
+    {
+        previous = current;
+        current = current->next;
+    }
+
+    if (current == NULL)
+    {
+        cout << "Block with ID " << id << " not found in the queue." << std::endl;
+        return;
+    }
+
+    if (previous == NULL)
+    {
+        front = current->next; // Remove front
+    }
+    else
+    {
+        previous->next = current->next;
+    }
+    if (current == rear)
+    {
+        rear = previous; // Update rear if needed
+    }
+    delete current;
+}

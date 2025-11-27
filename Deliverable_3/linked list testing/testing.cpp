@@ -9,10 +9,13 @@ using namespace std;
 
 int main()
 {
-    Block* blk1 = transaction(20.0, "Youraj");
-    Block* blk2 = transaction(15.0, "Youraj");
-    Block* blk3 = transaction(30.0, "Youraj");
-    mine_transaction();
+    // Creating some blocks to test the queue
+    Block* block1 =transaction(10.5, "Youraj");
+    Block* block2 =transaction(20.0, "Youraj");
+    Block* block3 =transaction(15.0, "Youraj");
+
+    txQueue.display();
+    mine_transaction(block1->index);
     chain.saveChain();
     return 0;
 }

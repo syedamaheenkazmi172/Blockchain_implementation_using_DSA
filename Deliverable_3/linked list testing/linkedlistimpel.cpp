@@ -65,13 +65,24 @@ void BlockChain::getChain()
         }
 
         stringstream ss(line);
+        string id, prevHash, nonce, hash, feeStr;
+        getline(ss, id, '|');
+        getline(ss, prevHash, '|');
+        getline(ss, nonce, '|');
+        getline(ss, hash, '|');
+        getline(ss, feeStr, '|');
         Block *newblock = new Block;
 
-        ss >> newblock->index >> newblock->prevHash >> newblock->nonce >> newblock->hash >> newblock->fee;
+        newblock->index = stoi(id);
+        newblock->prevHash = prevHash;
+        newblock->nonce = nonce;
+        newblock->hash = hash;
+        newblock->fee = stod(feeStr);
         insert(newblock);
-        cout<<"Loaded Block " << linecount << ": " << newblock->index << " " << newblock->prevHash << " " << newblock->nonce << " " << newblock->hash << " " << newblock->fee << endl;
         linecount++;
     }
+    cout << "Loaded " << linecount << " blocks from blockchain.txt\n";
+    infile.close();
 }
 
 void BlockChain::insert(Block *ptr)
@@ -94,7 +105,6 @@ void BlockChain::insert(Block *ptr)
         ptr->prevHash = tail->hash;
         tail = ptr;
     }
-
 }
 
 void BlockChain::saveChain() const
@@ -105,20 +115,17 @@ void BlockChain::saveChain() const
         return;
     }
 
-    // format: index|prevHash|nonce|hash|fee
-    for (Block* it = head; it != nullptr; it = it->next) {
-        ofs << it->index << "|" << it->prevHash << "|"
-            << it->nonce << "|" << it->hash << "|"
-            << it->fee << "\n";
+    for (Block* i = head; i != nullptr; i = i->next) {
+        ofs << i->index << "|" << i->prevHash << "|"<< i->nonce << "|" << i->hash << "|"<< i->fee << "\n";
     }
     ofs.close();
     cout << "Blockchain saved to blockchain.txt\n";
-    //this will store blockchain in a txt file so next time it can be loaded from there
+    //this will store blockchain in a txt file so next time i can be loaded from there
 }
 
 BlockChain chain = BlockChain(); // global blockchain object
 
-//static int amountofblocks; // updating index for each block
+int amountofblocks=0; // updating index for each block
 
 string noncemaker() // generates a 6 digit integer that can be used as a nonce
 {
@@ -201,7 +208,7 @@ Block* transaction(double money = 0, string name = "")
             // remove next and prev pointers as blocks are not being linked here, they will be linked during mining phase using BlockChain class
             // ptr->next = NULL; // new node so the next node should always be null
 
-            ptr->prevHash = hashmaker(noncemaker()); // we dont need a previous nonce when starting the blockchain
+            ptr->prevHash ="0"; // we dont need a previous nonce when starting the blockchain
             ptr->fee = money;
             ptr->nonce = noncemaker();
             ptr->hash = hashmaker(ptr->nonce);
@@ -220,31 +227,34 @@ Block* transaction(double money = 0, string name = "")
     return NULL;
 }
 
-void mine_transaction()
+void mine_transaction(int id)
 {
+    
     if (txQueue.isEmpty())
     {
         cout << "No transactions to mine\n";
         return;
     }
 
-    Block *ptr = new Block;
-    ptr = nullptr;
-    ptr = txQueue.front; // getting the front of the queue
-    txQueue.dequeue();   // removing the transaction from the queue after mining
+    Block *ptr = txQueue.front;
 
+    while (ptr!=NULL && ptr->index!=id)
+    {
+        ptr=ptr->next;
+    }
+    txQueue.dequeueById(id); // removing the transaction from the queue
     chain.insert(ptr); // inserting the mined block into the blockchain
 }
 // //if we want to use sha256 for hashing purposes we will need to download the openssl library and make a specific function to use sha256 (too much work)
 
-// //using a SHA256 implementation file as a header and using the functions provided in it
+// //using a SHA256 implementation file as a header and using the functions provided in i
 // void hashmaker(struct Block* ptr)
 // {
 //     SHA256 sha;     //object for the header file
 //     sha.update(ptr->nonce);         //hashing the nonce value
 
 //     //digest() is a function in the SHA256.h file for computing the hash
-//     ptr->hash = SHA256::toString(sha.digest());     //toString() converts it into a string form
+//     ptr->hash = SHA256::toString(sha.digest());     //toString() converts i into a string form
 // }
 
 // TO BE IMPLEMENTED DURING MINING PHASE (POST DELIVERABLE 2)
