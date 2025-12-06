@@ -309,7 +309,7 @@ public:
                 int n = temp1.size();
                 temp1.erase(n - 1);
                 user.close();
-                cout << "1.Create Transaction\t\t\t\t\t\t\t\t" << temp << "\n2.Switch to Mining account\t\t\t\t\t\t\t" << temp1 << "\n3.View Pending Queue of your Transactions\t\t\t\t\t" << temp3 << "\n4.View Detailed History\n5.Exit\n";
+                cout << "1.Create Transaction\t\t\t\t\t\t\t\t" << temp << "\n2.Switch to Mining account\t\t\t\t\t\t\t" << temp1 << "\n3.View Pending Queue of your Transactions\t\t\t\t\t" << temp3 << "\n4.View BlockChain\n5.Exit\n";
                 int choice = 0;
                 cout << "\nSelect choice\n";
                 cin >> choice;
@@ -408,6 +408,15 @@ public:
                     system("cls");
                     break;
                 }
+                case 4:
+                {
+                    Blockchain chain;
+                    chain.displayChain();
+                    cout << "\nRedirecting to Dashboard in 5 seconds\n";
+                    Sleep(5000);
+                    system("cls");
+                    break;
+                }
                 default:
                     cout << "Invalid choice\n";
                     br = true;
@@ -494,21 +503,17 @@ y:
     cout << "Add your username\n";
     cin >> username;
     fstream log;
-    log.open("login.txt", ios::in);
-    string temp;
-    while (getline(log, temp))
+    log.open(username + ".txt", ios::in);
+    if (log.is_open())
     {
-        if (temp == username)
-        {
-            cout << "Username already taken, choose another\n";
-            Sleep(3000);
-            system("cls");
-            banner();
-            log.close();
-            insert_new_private_key.close();
-            insert_new_user.close();
-            goto y;
-        }
+        cout << "Username already taken, choose another\n";
+        Sleep(3000);
+        system("cls");
+        banner();
+        log.close();
+        insert_new_private_key.close();
+        insert_new_user.close();
+        goto y;
     }
     srand(time(0));
     int salt = rand() % 10000;
