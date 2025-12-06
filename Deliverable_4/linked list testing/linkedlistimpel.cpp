@@ -1,9 +1,14 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include <sstream>
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
+
+static int amountofblocks = 0;
+
 void update_money(double money, double amount, fstream &user, string name, string rec)
 {
     string temp = "";
@@ -37,12 +42,11 @@ void update_money(double money, double amount, fstream &user, string name, strin
     rec_out.close();
 }
 
-
 void mining_gift(double amount, string name)
 {
     fstream user;
     user.open(name + ".txt", ios::in);
-    if (!user.is_open()) 
+    if (!user.is_open())
     {
         cout << "File not found!" << endl;
         return;
@@ -75,19 +79,146 @@ void mining_gift(double amount, string name)
     user_out.close();
 }
 
-
-
-
-
 struct Block
 {
     int index;
     string nonce;
     string hash;
     double fee;
+    string prevHash;
+    Block *next = NULL;
+    Block *prev = NULL;
 };
+struct Blockchain
+{
+    Block *head;
+    Block *tail;
 
-static int amountofblocks;
+    Blockchain()
+    {
+        this->head = nullptr;
+        this->tail = nullptr;
+        getChain();
+    }
+
+    void insert(Block *ptr)
+    {
+        ptr->next = NULL;
+        ptr->prev = NULL;
+
+        if (tail == NULL)
+        {
+            head = tail = ptr;
+            if (ptr->prevHash.empty())
+                ptr->prevHash = "0";
+        }
+        else
+        {
+            tail->next = ptr;
+            ptr->prev = tail;
+
+            // Only overwrite prevHash if it's a new block (empty),
+            // otherwise respect the file's data.
+            if (ptr->prevHash.empty())
+            {
+                ptr->prevHash = tail->hash;
+            }
+
+            tail = ptr;
+        }
+    }
+
+    void getChain()
+    {
+        ifstream block_chain;
+        block_chain.open("blockchain.txt");
+
+        if (!block_chain)
+            return;
+        while (head)
+        {
+            Block *tmp = head;
+            head = head->next;
+            delete tmp;
+        }
+
+        head = tail = nullptr;
+
+        string line;
+        int max_index = -1; // To track the last index
+
+        while (getline(block_chain, line))
+        {
+            if (line.empty())
+                continue;
+
+            stringstream ss(line);
+            string id, prevHash, nonce, hash, feeStr;
+            getline(ss, id, '|');
+            getline(ss, prevHash, '|');
+            getline(ss, nonce, '|');
+            getline(ss, hash, '|');
+            getline(ss, feeStr, '|');
+
+            Block *newblock = new Block;
+            newblock->index = stoi(id);
+            newblock->prevHash = prevHash;
+            newblock->nonce = nonce;
+            newblock->hash = hash;
+            newblock->fee = stod(feeStr);
+            if (newblock->index > max_index)
+            {
+                max_index = newblock->index;
+            }
+
+            insert(newblock);
+        }
+        if (max_index != -1)
+        {
+            amountofblocks = max_index + 1;
+        }
+
+        cout << "Loaded blockchain. Next Block Index: " << amountofblocks << "\n";
+        block_chain.close();
+    }
+
+    void saveChain() const
+    {
+        ofstream ofs("blockchain.txt", ios::trunc);
+        if (!ofs)
+        {
+            cout << "Error: couldn't open blockchain.txt for writing\n";
+            return;
+        }
+
+        for (Block *i = head; i != nullptr; i = i->next)
+        {
+            ofs << i->index << "|" << i->prevHash << "|" << i->nonce << "|" << i->hash << "|" << i->fee << "\n";
+        }
+        ofs.close();
+        cout << "Blockchain saved to blockchain.txt\n";
+    }
+    void displayChain()
+    {
+        if (head == NULL)
+        {
+            cout << "Blockchain is empty.\n";
+            return;
+        }
+
+        Block *temp = head;
+        while (temp != NULL)
+        {
+            cout << temp->hash;
+            temp = temp->next;
+            if (temp != NULL)
+            {
+                cout << "->";
+            }
+        }
+        
+    }
+};
 
 string noncemaker()
 {
@@ -104,27 +235,27 @@ string hashmaker(string ab)
 
     while (val != 0)
     {
-        int remainder = 0; 
+        int remainder = 0;
 
         char hexed;
 
         remainder = val % 16;
 
-        if (remainder < 10) 
+        if (remainder < 10)
         {
-            hexed = remainder + 48; 
+            hexed = remainder + 48;
         }
 
         else
         {
-            hexed = remainder + 55; 
+            hexed = remainder + 55;
         }
 
-        finalans += hexed; 
-        val = val / 16;    
+        finalans += hexed;
+        val = val / 16;
     }
 
-    int size = finalans.size();       
+    int size = finalans.size();
     for (int i = 0; i < size / 2; i++)
     {
         char temp = finalans[size - i - 1];
@@ -163,7 +294,7 @@ Block *transaction(double money = 0, string name = "", string rec = "")
         {
             user.close();
             user.open(name + ".txt", ios::in);
-            Block *ptr = new Block;
+            ptr = new Block;
             update_money(am, money, user, name, rec);
             ptr->fee = money;
             ptr->fee = money;

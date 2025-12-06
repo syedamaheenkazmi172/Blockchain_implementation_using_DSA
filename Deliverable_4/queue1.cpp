@@ -8,6 +8,14 @@ struct link
     link *prev = NULL;
 };
 
+
+struct bstbch
+{
+    bstbch* left;
+    bstbch* right;
+    Block* block;
+};
+
 void initial(link *&head, link *&ptr, double money, string name,string rec)
 {
     head = new link;
@@ -55,12 +63,56 @@ int displayhash(link* &head)
 
     link* temp = head;
 
-    cout << "All hashes: " << endl;
-    while(temp != NULL)
+    cout << "Highest priority block: " << endl;
+    cout << "Hash: " << temp->block->hash << "  , Fee: " << temp->block->fee << endl;
+    return 0;
+}
+
+void dequeue(link* &head)
+{
+    if(head == NULL)
     {
-        cout << "Hash: " << temp->block->hash << "  , Fee: " << temp->block->fee << endl;
-        temp = temp->next;
+        cout << "Queue is empty" << endl;
+        return;
     }
 
-    return 0;
+    link* test = head;
+    head = head->next;
+
+    delete test;
+}
+
+
+bstbch* bstinsert(bstbch* &chainstart, Block* block)
+{
+    bstbch* t;
+    if(chainstart==NULL)
+    {
+        t = new bstbch;
+        t->left = t->right = NULL;
+        t->block = block;
+        return t;
+    }
+
+    else if(block->fee > chainstart->block->fee)
+    {
+        chainstart->right = bstinsert(chainstart->right, block);
+    }
+
+    else
+    {
+        chainstart->left = bstinsert(chainstart->left, block);
+    }
+
+    return chainstart;
+}
+
+void bsttraversal(bstbch* chainstart)
+{
+    if(chainstart != NULL)
+    {
+        bsttraversal(chainstart->left);
+        cout << chainstart->block->hash << ", " << chainstart->block->fee << endl;
+        bsttraversal(chainstart->right);
+    }
 }
