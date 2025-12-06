@@ -120,18 +120,18 @@ public:
                 int choice = 0;
                 cout << "\nSelect any option:\n";
                 cin >> choice;
-                switch(choice)
+                switch (choice)
                 {
-                    case 1:
+                case 1:
                     cout << "Hashes of all the blocks present within the BlockChain: " << endl;
                     int check = displayhash(head);
 
-                    if(check == 1)
+                    if (check == 1)
                     {
                         cout << "You will be directed back to the miner dashboard in a few seconds\n";
                         Sleep(5000);
                         system("cls");
-                        break;   
+                        break;
                     }
 
                     else
@@ -141,44 +141,41 @@ public:
                         cin >> hsh;
 
                         cout << endl;
-                        
 
                         double giftprize = 0;
-                        link* temp = head;
-                        while(temp != NULL)
+                        link *temp = head;
+                        while (temp != NULL)
                         {
-                            if(temp->block->hash == hsh)
+                            if (temp->block->hash == hsh)
                             {
-                                giftprize = ((temp->block->fee)/100) * 20;
+                                giftprize = ((temp->block->fee) / 100) * 20;
                             }
 
                             temp = temp->next;
                         }
-                        
+
                         cout << "Starting the mining process......" << endl;
                         Sleep(5000);
-                        for(int i = 1000; i<=9000; i++)
+                        for (int i = 1000; i <= 9000; i++)
                         {
                             string strto = to_string(i);
                             string test = hashmaker(strto);
 
-                            if(test == hsh)
+                            if (test == hsh)
                             {
                                 cout << "Congratulations! Block " << test << " mined successfully!" << endl;
-                                break; 
+                                break;
                             }
                         }
 
                         cout << "Transferring " << giftprize << " to your wallet......." << endl;
                         mining_gift(giftprize, usr);
 
-
                         cout << "You will be directed back to the miner dashboard in a few seconds\n";
                         Sleep(5000);
                         system("cls");
                         break;
                     }
-
                 }
             }
         }
@@ -207,7 +204,7 @@ public:
         bool yes = false;
         while (getline(user_name, temp[0]))
         {
-            //cin.ignore();
+            // cin.ignore();
             getline(private_key, temp[1]);
             if (temp[0] == usr)
             {
@@ -367,7 +364,7 @@ public:
                 }
 
                 case 2:
-                {    
+                {
                     cout << "Switching to your mining account.....\n";
                     Sleep(5000);
                     return 2;
@@ -452,7 +449,7 @@ public:
             system("cls");
             int store = wallet(usr);
 
-            if(store == 2)
+            if (store == 2)
             {
                 system("cls");
                 Miner mn;
@@ -471,21 +468,18 @@ y:
     cout << "Add your username\n";
     cin >> username;
     fstream log;
-    log.open("login.txt", ios::in);
-    string temp;
-    while (getline(log, temp))
+
+    log.open(username + ".txt", ios::in);
+    if (log.is_open())
     {
-        if (temp == username)
-        {
-            cout << "Username already taken, choose another\n";
-            Sleep(3000);
-            system("cls");
-            banner();
-            log.close();
-            insert_new_private_key.close();
-            insert_new_user.close();
-            goto y;
-        }
+        cout << "Username already taken, choose another\n";
+        Sleep(3000);
+        system("cls");
+        banner();
+        log.close();
+        insert_new_private_key.close();
+        insert_new_user.close();
+        goto y;
     }
     srand(time(0));
     int salt = rand() % 10000;
@@ -547,7 +541,6 @@ y:
     }
 }
 
-
 int main()
 {
 u:
@@ -590,7 +583,7 @@ u:
             cout << "Invalid option selected" << endl;
         }
 
-        else if(inp == 1)
+        else if (inp == 1)
         {
             cout << "Enter your username and private key to access your mining account\n";
             string temp = "";
