@@ -82,6 +82,7 @@ class Miner
 public:
     int mining(string usr)
     {
+        bstbch* chainstart = nullptr;
         fstream user;
         bool br = false;
         user.open(usr + ".txt", ios::in);
@@ -116,69 +117,91 @@ public:
                 int n = temp1.size();
                 temp1.erase(n - 1);
                 user.close();
-                cout << "1.Mining\t\t\t\t\t\t\t\t" << temp << "\n2.Mining History\t\t\t\t\t\t\t" << temp1 << endl;
+                cout << "1.Mining\t\t\t\t\t\t\t\t" << temp << "\n2.Show Blockchain\t\t\t\t\t\t\t" << temp1 << endl;
                 int choice = 0;
                 cout << "\nSelect any option:\n";
                 cin >> choice;
                 switch(choice)
                 {
                     case 1:
-                    cout << "Hashes of all the blocks present within the BlockChain: " << endl;
-                    int check = displayhash(head);
-
-                    if(check == 1)
                     {
-                        cout << "You will be directed back to the miner dashboard in a few seconds\n";
-                        Sleep(5000);
-                        system("cls");
-                        break;   
+                        cout << "Hash of the highest priority block: " << endl;
+                        int check = displayhash(head);
+
+                        if(check == 1)
+                        {
+                            cout << "You will be directed back to the miner dashboard in a few seconds\n";
+                            Sleep(5000);
+                            system("cls");
+                            continue;
+                            // break;   
+                        }
+
+                        else
+                        {
+                            cout << "For the mining process to start, please mention the hash of the high priority block: " << endl;
+                            string hsh;
+                            cin >> hsh;
+
+                            cout << endl;
+                            
+
+                            double giftprize = 0;
+                            link* temp = head;
+                            while(temp != NULL)
+                            {
+                                if(temp->block->hash == hsh)
+                                {
+                                    giftprize = ((temp->block->fee)/100) * 20;
+                                }
+
+                                temp = temp->next;
+                            }
+                            
+                            cout << "Starting the mining process......" << endl;
+                            Sleep(5000);
+                            for(int i = 1000; i<=9000; i++)
+                            {
+                                string strto = to_string(i);
+                                string test = hashmaker(strto);
+
+                                if(test == hsh)
+                                {
+                                    cout << "Congratulations! Block " << test << " mined successfully and added to the Blockchain!" << endl;
+                                    break; 
+                                }
+                            }
+
+                            cout << "Transferring " << giftprize << " to your wallet......." << endl;
+                            mining_gift(giftprize, usr);
+
+                            Block* bstcopy = new Block;
+                            bstcopy->fee = head->block->fee;
+                            bstcopy->hash = head->block->hash;
+                            bstcopy->nonce = head->block->nonce;
+                            bstcopy->index = head->block->index;
+
+
+                            chainstart = bstinsert(chainstart, bstcopy);
+                            dequeue(head);
+
+                            cout << "You will be directed back to the miner dashboard in a few seconds\n";
+                            Sleep(5000);
+                            system("cls");
+                            break;
+                        }
                     }
 
-                    else
+                    case 2:
                     {
-                        cout << "Please select the block which you would like to mine: " << endl;
-                        string hsh;
-                        cin >> hsh;
-
+                        cout << "Displaying the Blockchain: " << endl;
+                        bsttraversal(chainstart);
                         cout << endl;
-                        
-
-                        double giftprize = 0;
-                        link* temp = head;
-                        while(temp != NULL)
-                        {
-                            if(temp->block->hash == hsh)
-                            {
-                                giftprize = ((temp->block->fee)/100) * 20;
-                            }
-
-                            temp = temp->next;
-                        }
-                        
-                        cout << "Starting the mining process......" << endl;
-                        Sleep(5000);
-                        for(int i = 1000; i<=9000; i++)
-                        {
-                            string strto = to_string(i);
-                            string test = hashmaker(strto);
-
-                            if(test == hsh)
-                            {
-                                cout << "Congratulations! Block " << test << " mined successfully!" << endl;
-                                break; 
-                            }
-                        }
-
-                        cout << "Transferring " << giftprize << " to your wallet......." << endl;
-                        mining_gift(giftprize, usr);
-
-
-                        cout << "You will be directed back to the miner dashboard in a few seconds\n";
+                        cout << "You will be rdirected to the dashboard....\n";
                         Sleep(5000);
                         system("cls");
                         break;
                     }
-
                 }
             }
         }
