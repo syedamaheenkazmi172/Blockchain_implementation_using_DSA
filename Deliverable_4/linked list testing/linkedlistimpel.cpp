@@ -117,8 +117,6 @@ struct Blockchain
             tail->next = ptr;
             ptr->prev = tail;
 
-            // Only overwrite prevHash if it's a new block (empty),
-            // otherwise respect the file's data.
             if (ptr->prevHash.empty())
             {
                 ptr->prevHash = tail->hash;
@@ -145,7 +143,7 @@ struct Blockchain
         head = tail = nullptr;
 
         string line;
-        int max_index = -1; // To track the last index
+        int max_index = -1;
 
         while (getline(block_chain, line))
         {
@@ -198,6 +196,9 @@ struct Blockchain
         ofs.close();
         cout << "Blockchain saved to blockchain.txt\n";
     }
+
+
+    
     void displayChain()
     {
         if (head == NULL)

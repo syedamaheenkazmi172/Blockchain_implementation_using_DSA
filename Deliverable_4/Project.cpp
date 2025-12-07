@@ -105,19 +105,18 @@ public:
             }
             users_wallet.close();
             user.close();
-            // link *head, *ptr;
             int count_of_unallocated_blocks = 0;
             while (true)
             {
                 banner();
                 fstream user;
                 user.open(usr + ".txt", ios::in);
-                string temp = "", temp1 = "", temp3 = "";
-                getline(user, temp, '|'), getline(user, temp1), getline(user, temp3);
+                string temp = "", temp1 = "";
+                getline(user, temp, '|'), getline(user, temp1);
                 int n = temp1.size();
                 temp1.erase(n - 1);
                 user.close();
-                cout << "1.Mining\t\t\t\t\t\t\t\t" << temp << "\n2.Show Blockchain\t\t\t\t\t\t\t" << temp1 << endl;
+                cout << "1.Mining\t\t\t\t\t\t\t\t" << temp << "\n2.Recently mined\t\t\t\t\t\t\t" << temp1 << "\n3.Exit\t\t\t\t\t\t\t" << endl;
                 int choice = 0;
                 cout << "\nSelect any option:\n";
                 cin >> choice;
@@ -141,15 +140,7 @@ public:
                         double giftprize = 0;
 
                         giftprize = ((head->block->fee) / 100) * 20;
-                        /* while (temp != NULL)
-                         {
-                             if (temp->block->hash == check)
-                             {
-                                 giftprize = ((temp->block->fee) / 100) * 20;
-                             }
 
-                             temp = temp->next;
-                         }*/
                         cout << "Starting the mining process......" << endl;
                         Sleep(5000);
                         for (int i = 1000; i <= 9000; i++)
@@ -166,11 +157,16 @@ public:
 
                         cout << "Transferring " << giftprize << " to your wallet......." << endl;
                         mining_gift(giftprize, usr);
-                        Blockchain mainChain; 
+                        
                         Block *bstcopy = new Block;
+                        chainstart = bstinsert(chainstart, bstcopy);
+                        dequeue(head);
+
                         bstcopy->fee = head->block->fee;
                         bstcopy->hash = head->block->hash;
                         bstcopy->nonce = head->block->nonce;
+
+                        Blockchain mainChain; 
                         if (mainChain.tail != nullptr)
                         {
                             bstcopy->prevHash = mainChain.tail->hash;
@@ -181,10 +177,10 @@ public:
                             bstcopy->prevHash = "0";
                             bstcopy->index = 0;
                         }
+
                         mainChain.insert(bstcopy);
                         mainChain.saveChain();
-                        chainstart = bstinsert(chainstart, bstcopy);
-                        dequeue(head);
+
 
                         cout << "You will be directed back to the miner dashboard in a few seconds\n";
                         Sleep(5000);
@@ -198,14 +194,25 @@ public:
                     cout << "Displaying the Blockchain: " << endl;
                     bsttraversal(chainstart);
                     cout << endl;
-                    cout << "You will be rdirected to the dashboard....\n";
+                    cout << "You will be redirected to the dashboard....\n";
                     Sleep(5000);
                     system("cls");
                     break;
                 }
+
+                default:
+                    cout << "Invalid choice :( exiting......\n";
+                    Sleep(3000);
+                    br = true;
+                    break;
+                }
+                if (br)
+                {
+                    break;
                 }
             }
         }
+        return 1;
     }
 
     void mlogin(string usr, string priv)
@@ -231,7 +238,6 @@ public:
         bool yes = false;
         while (getline(user_name, temp[0]))
         {
-            // cin.ignore();
             getline(private_key, temp[1]);
             if (temp[0] == usr)
             {
@@ -298,19 +304,18 @@ public:
             users_wallet.close();
 
             user.close();
-            // link *head, *ptr;
             int count_of_unallocated_blocks = 0;
             while (true)
             {
                 banner();
                 fstream user;
                 user.open(usr + ".txt", ios::in);
-                string temp = "", temp1 = "", temp3 = "";
-                getline(user, temp, '|'), getline(user, temp1), getline(user, temp3);
+                string temp = "", temp1 = "";
+                getline(user, temp, '|'), getline(user, temp1);
                 int n = temp1.size();
                 temp1.erase(n - 1);
                 user.close();
-                cout << "1.Create Transaction\t\t\t\t\t\t\t\t" << temp << "\n2.Switch to Mining account\t\t\t\t\t\t\t" << temp1 << "\n3.View Pending Queue of your Transactions\t\t\t\t\t" << temp3 << "\n4.View BlockChain\n5.Exit\n";
+                cout << "1.Create Transaction\t\t\t\t\t\t\t\t" << temp << "\n2.Switch to Mining account\t\t\t\t\t\t\t" << temp1 << "\n3.View Pending Queue of your Transactions\t\t\t\t\t" << "\n4.View BlockChain\n5.View recent transacted amount\n6.Exit\n";
                 int choice = 0;
                 cout << "\nSelect choice\n";
                 cin >> choice;
@@ -340,6 +345,7 @@ public:
                                 double amount;
                                 cin >> amount;
                                 enqueue(head, ptr, amount, usr, username);
+                                push(amount);
                                 count_of_unallocated_blocks++;
                             }
                             catch (const out_of_range &e)
@@ -352,7 +358,6 @@ public:
                             cout << "Private key doesnot match\n";
                             Sleep(3000);
                             system("cls");
-                            // return 0;
                         }
                     }
                     else
@@ -376,6 +381,7 @@ public:
                                 double amount;
                                 cin >> amount;
                                 initial(head, ptr, amount, usr, username);
+                                push(amount);
                                 count_of_unallocated_blocks++;
                             }
                             catch (const out_of_range &e)
@@ -405,7 +411,8 @@ public:
                         cout << p->block->hash << " --> ";
                     }
                     cout << "\n";
-                    Sleep(10000);
+                    cout << "\nRedirecting to Dashboard in 5 seconds\n";
+                    Sleep(5000);
                     system("cls");
                     break;
                 }
@@ -413,6 +420,16 @@ public:
                 {
                     Blockchain chain;
                     chain.displayChain();
+                    cout << "\nRedirecting to Dashboard in 5 seconds\n";
+                    Sleep(5000);
+                    system("cls");
+                    break;
+                }
+
+                case 5:
+                {
+                    cout << "Accessing transaction stack to find your most recently transacted amount...." << endl;
+                    cout << "Amount: " << seetop() << endl;
                     cout << "\nRedirecting to Dashboard in 5 seconds\n";
                     Sleep(5000);
                     system("cls");
