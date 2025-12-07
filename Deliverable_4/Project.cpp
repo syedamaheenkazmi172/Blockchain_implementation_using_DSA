@@ -191,7 +191,7 @@ public:
 
                 case 2:
                 {
-                    cout << "Displaying the Blockchain: " << endl;
+                    cout << "Displaying recently mined blocks: " << endl;
                     bsttraversal(chainstart);
                     cout << endl;
                     cout << "You will be redirected to the dashboard....\n";
@@ -200,10 +200,18 @@ public:
                     break;
                 }
 
-                default:
-                    cout << "Invalid choice :( exiting......\n";
-                    Sleep(3000);
+                case 3:
+                {
+                    cout << "Exiting...." << endl;
+                    Sleep(2000);
                     br = true;
+                    break;
+                }
+
+                default:
+                    cout << "Invalid choice :(\n";
+                    Sleep(3000);
+                    system("cls");
                     break;
                 }
                 if (br)
