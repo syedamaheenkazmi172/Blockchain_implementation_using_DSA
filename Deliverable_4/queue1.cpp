@@ -70,7 +70,6 @@ void enqueue(link *&head, link *&ptr, double money, string name,string rec)
     ptr = node;
 }
 
-
 string displayhash(link* &head)
 {
     if(head == NULL)

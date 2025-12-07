@@ -5,6 +5,7 @@
 #include "queue1.cpp"
 #include <bitset>
 #include <ctime>
+#include"graph.h"
 using namespace std;
 
 link *head, *ptr;
@@ -180,7 +181,6 @@ public:
 
                         mainChain.insert(bstcopy);
                         mainChain.saveChain();
-
 
                         cout << "You will be directed back to the miner dashboard in a few seconds\n";
                         Sleep(5000);
@@ -442,6 +442,12 @@ public:
                     Sleep(5000);
                     system("cls");
                     break;
+                }
+                case 6:
+                {
+                    cout<<"Exiting...\nThank you for using our service\n";
+                    Sleep(1000);
+                    return 0;
                 }
                 default:
                     cout << "Invalid choice\n";

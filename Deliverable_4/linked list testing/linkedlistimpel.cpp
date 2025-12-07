@@ -4,7 +4,7 @@
 #include <sstream>
 #include <ctime>
 #include <cstdlib>
-
+#include "../graph.h"
 using namespace std;
 
 static int amountofblocks = 0;
@@ -308,7 +308,8 @@ Block *transaction(double money = 0, string name = "", string rec = "")
             cout << "Index number for the transaction: " << ptr->index << endl;
 
             amountofblocks++;
-
+            addEdge(name, rec, money, false);
+            saveGraph("graph.txt");
             return ptr;
         }
     }
