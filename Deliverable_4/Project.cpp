@@ -82,7 +82,7 @@ class Miner
 public:
     int mining(string usr)
     {
-        bstbch* chainstart = nullptr;
+        bstbch *chainstart = nullptr;
         fstream user;
         bool br = false;
         user.open(usr + ".txt", ios::in);
@@ -121,87 +121,88 @@ public:
                 int choice = 0;
                 cout << "\nSelect any option:\n";
                 cin >> choice;
-                switch(choice)
+                switch (choice)
                 {
-                    case 1:
+                case 1:
+                {
+
+                    string check = displayhash(head);
+
+                    if (check == "")
                     {
-                        cout << "Hash of the highest priority block: " << endl;
-                        int check = displayhash(head);
-
-                        if(check == 1)
-                        {
-                            cout << "You will be directed back to the miner dashboard in a few seconds\n";
-                            Sleep(5000);
-                            system("cls");
-                            continue;
-                            // break;   
-                        }
-
-                        else
-                        {
-                            cout << "For the mining process to start, please mention the hash of the high priority block: " << endl;
-                            string hsh;
-                            cin >> hsh;
-
-                            cout << endl;
-                            
-
-                            double giftprize = 0;
-                            link* temp = head;
-                            while(temp != NULL)
-                            {
-                                if(temp->block->hash == hsh)
-                                {
-                                    giftprize = ((temp->block->fee)/100) * 20;
-                                }
-
-                                temp = temp->next;
-                            }
-                            
-                            cout << "Starting the mining process......" << endl;
-                            Sleep(5000);
-                            for(int i = 1000; i<=9000; i++)
-                            {
-                                string strto = to_string(i);
-                                string test = hashmaker(strto);
-
-                                if(test == hsh)
-                                {
-                                    cout << "Congratulations! Block " << test << " mined successfully and added to the Blockchain!" << endl;
-                                    break; 
-                                }
-                            }
-
-                            cout << "Transferring " << giftprize << " to your wallet......." << endl;
-                            mining_gift(giftprize, usr);
-
-                            Block* bstcopy = new Block;
-                            bstcopy->fee = head->block->fee;
-                            bstcopy->hash = head->block->hash;
-                            bstcopy->nonce = head->block->nonce;
-                            bstcopy->index = head->block->index;
-
-
-                            chainstart = bstinsert(chainstart, bstcopy);
-                            dequeue(head);
-
-                            cout << "You will be directed back to the miner dashboard in a few seconds\n";
-                            Sleep(5000);
-                            system("cls");
-                            break;
-                        }
+                        cout << "You will be directed back to the miner dashboard in a few seconds\n";
+                        Sleep(5000);
+                        system("cls");
+                        continue;
                     }
 
-                    case 2:
+                    else
                     {
-                        cout << "Displaying the Blockchain: " << endl;
-                        bsttraversal(chainstart);
-                        cout << endl;
-                        cout << "You will be rdirected to the dashboard....\n";
+                        double giftprize = 0;
+
+                        giftprize = ((head->block->fee) / 100) * 20;
+                        /* while (temp != NULL)
+                         {
+                             if (temp->block->hash == check)
+                             {
+                                 giftprize = ((temp->block->fee) / 100) * 20;
+                             }
+
+                             temp = temp->next;
+                         }*/
+                        cout << "Starting the mining process......" << endl;
+                        Sleep(5000);
+                        for (int i = 1000; i <= 9000; i++)
+                        {
+                            string strto = to_string(i);
+                            string test = hashmaker(strto);
+
+                            if (test == check)
+                            {
+                                cout << "Congratulations! Block " << test << " mined successfully and added to the Blockchain!" << endl;
+                                break;
+                            }
+                        }
+
+                        cout << "Transferring " << giftprize << " to your wallet......." << endl;
+                        mining_gift(giftprize, usr);
+                        Blockchain mainChain; 
+                        Block *bstcopy = new Block;
+                        bstcopy->fee = head->block->fee;
+                        bstcopy->hash = head->block->hash;
+                        bstcopy->nonce = head->block->nonce;
+                        if (mainChain.tail != nullptr)
+                        {
+                            bstcopy->prevHash = mainChain.tail->hash;
+                            bstcopy->index = mainChain.tail->index + 1;
+                        }
+                        else
+                        {
+                            bstcopy->prevHash = "0";
+                            bstcopy->index = 0;
+                        }
+                        mainChain.insert(bstcopy);
+                        mainChain.saveChain();
+                        chainstart = bstinsert(chainstart, bstcopy);
+                        dequeue(head);
+
+                        cout << "You will be directed back to the miner dashboard in a few seconds\n";
                         Sleep(5000);
                         system("cls");
                         break;
                     }
+                }
+
+                case 2:
+                {
+                    cout << "Displaying the Blockchain: " << endl;
+                    bsttraversal(chainstart);
+                    cout << endl;
+                    cout << "You will be rdirected to the dashboard....\n";
+                    Sleep(5000);
+                    system("cls");
+                    break;
+                }
                 }
             }
         }
@@ -230,7 +231,7 @@ public:
         bool yes = false;
         while (getline(user_name, temp[0]))
         {
-            //cin.ignore();
+            // cin.ignore();
             getline(private_key, temp[1]);
             if (temp[0] == usr)
             {
@@ -390,7 +391,7 @@ public:
                 }
 
                 case 2:
-                {    
+                {
                     cout << "Switching to your mining account.....\n";
                     Sleep(5000);
                     return 2;
@@ -484,7 +485,7 @@ public:
             system("cls");
             int store = wallet(usr);
 
-            if(store == 2)
+            if (store == 2)
             {
                 system("cls");
                 Miner mn;
@@ -564,7 +565,7 @@ y:
         insert_new_private_key.close();
         log.close();
         fstream create_user_file, users_wallet;
-        users_wallet.open("users and wallet.txt", ios::app);
+        users_wallet.open("users_and_wallet.txt", ios::app);
         create_user_file.open(username + ".txt", ios::out);
         create_user_file << "Wallet Owner:" << username << "|Current Coins:0|" << '\n'
                          << "Wallet address:" << wallet_address;
@@ -574,7 +575,6 @@ y:
         users_wallet.close();
     }
 }
-
 
 int main()
 {
@@ -618,7 +618,7 @@ u:
             cout << "Invalid option selected" << endl;
         }
 
-        else if(inp == 1)
+        else if (inp == 1)
         {
             cout << "Enter your username and private key to access your mining account\n";
             string temp = "";

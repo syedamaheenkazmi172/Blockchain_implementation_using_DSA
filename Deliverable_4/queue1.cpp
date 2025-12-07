@@ -53,19 +53,19 @@ void enqueue(link *&head, link *&ptr, double money, string name,string rec)
 }
 
 
-int displayhash(link* &head)
+string displayhash(link* &head)
 {
     if(head == NULL)
     {
         cout << "No blocks have been made." << endl;
-        return 1;
+        return "";
     }
 
     link* temp = head;
 
     cout << "Highest priority block: " << endl;
     cout << "Hash: " << temp->block->hash << "  , Fee: " << temp->block->fee << endl;
-    return 0;
+    return temp->block->hash;
 }
 
 void dequeue(link* &head)
