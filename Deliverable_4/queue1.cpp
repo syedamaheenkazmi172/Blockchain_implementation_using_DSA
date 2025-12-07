@@ -16,6 +16,24 @@ struct bstbch
     Block* block;
 };
 
+
+
+struct stack_base
+{
+    double data;
+    stack_base* stack_next = NULL;
+};
+
+struct history_stack
+{
+    stack_base* top = NULL;
+    int sizeofstack;
+};
+
+stack_base* temp = new stack_base;
+history_stack* obj = new history_stack;
+
+
 void initial(link *&head, link *&ptr, double money, string name,string rec)
 {
     head = new link;
@@ -115,4 +133,24 @@ void bsttraversal(bstbch* chainstart)
         cout << chainstart->block->hash << ", " << chainstart->block->fee << endl;
         bsttraversal(chainstart->right);
     }
+}
+
+
+void push(double &amount)
+{
+    temp->data = amount;
+    temp->stack_next = obj->top;
+    obj->top = temp;
+    (obj->sizeofstack)++;
+}
+
+int seetop()
+{
+    if(obj == NULL)
+    {
+        cout << "No recent transactions/Transaction stack empty" << endl;
+        return -1;
+    }
+
+    return obj->top->data;
 }
