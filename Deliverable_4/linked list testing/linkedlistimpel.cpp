@@ -195,6 +195,7 @@ struct Blockchain
         }
         ofs.close();
         cout << "Blockchain saved to blockchain.txt\n";
+        cout << "\n";
     }
 
 

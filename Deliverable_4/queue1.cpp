@@ -130,7 +130,7 @@ void bsttraversal(bstbch* chainstart)
     if(chainstart != NULL)
     {
         bsttraversal(chainstart->left);
-        cout << chainstart->block->hash << ", " << chainstart->block->fee << endl;
+        cout << chainstart->block->hash << ", " << "Amount: " << chainstart->block->fee << endl;
         bsttraversal(chainstart->right);
     }
 }

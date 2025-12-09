@@ -155,16 +155,16 @@ public:
                             }
                         }
 
+                        cout << "\n";
                         cout << "Transferring " << giftprize << " to your wallet......." << endl;
                         mining_gift(giftprize, usr);
                         
                         Block *bstcopy = new Block;
-                        chainstart = bstinsert(chainstart, bstcopy);
-                        dequeue(head);
-
                         bstcopy->fee = head->block->fee;
                         bstcopy->hash = head->block->hash;
                         bstcopy->nonce = head->block->nonce;
+                        chainstart = bstinsert(chainstart, bstcopy);
+                        dequeue(head);
 
                         Blockchain mainChain; 
                         if (mainChain.tail != nullptr)
@@ -181,9 +181,9 @@ public:
                         mainChain.insert(bstcopy);
                         mainChain.saveChain();
 
-
+                        cout << "\n";
                         cout << "You will be directed back to the miner dashboard in a few seconds\n";
-                        Sleep(5000);
+                        Sleep(7000);
                         system("cls");
                         break;
                     }
